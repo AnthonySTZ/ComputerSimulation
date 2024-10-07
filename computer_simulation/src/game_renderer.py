@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class Board:
+class Renderer:
     def __init__(self, window_width=600) -> None:
 
         self.window_size = (window_width, window_width * 0.8)
