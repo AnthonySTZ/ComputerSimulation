@@ -19,6 +19,11 @@ class Renderer:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
+                elif event.type == pg.MOUSEBUTTONUP:
+                    pos = pg.mouse.get_pos()
+                    for item in self.items:
+                        if item.is_mouse_over(pos):
+                            item.toogle_state()
 
             self.screen.fill(pg.Color(210, 210, 210))
 
@@ -33,13 +38,4 @@ class Renderer:
 
     def draw_items(self) -> None:
         for item in self.items:
-            pg.draw.rect(
-                self.screen,
-                pg.Color(item.color),
-                (
-                    item.position[0],
-                    item.position[1],
-                    20,
-                    20,
-                ),
-            )
+            pg.draw.rect(self.screen, pg.Color(item.color), item.get_rect())
