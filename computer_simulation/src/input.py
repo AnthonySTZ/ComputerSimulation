@@ -1,5 +1,6 @@
 from item import Item
 import pygame as pg
+import logics
 
 
 class Input(Item):
@@ -27,12 +28,13 @@ class Input(Item):
         rect = pg.Rect(
             self.position[0],
             self.position[1],
-            20,
-            20,
+            self.size[0],
+            self.size[1],
         )
 
         return rect
 
     def is_mouse_over(self, mouse_position: tuple) -> bool:
-        rect = self.get_rect()
-        return rect.collidepoint(mouse_position)
+        return logics.check_collision(
+            self.position, self.size[0], self.size[1], mouse_position
+        )

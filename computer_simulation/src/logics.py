@@ -1,4 +1,6 @@
-def check_collision(left_corner_position, width, height, point_position) -> bool:
+def check_collision(
+    left_corner_position: tuple, width: int, height: int, point_position: tuple
+) -> bool:
     x, y = point_position
     corner_x, corner_y = left_corner_position
     if (
