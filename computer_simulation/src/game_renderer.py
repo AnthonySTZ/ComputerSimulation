@@ -4,7 +4,7 @@ import pygame as pg
 class Renderer:
     def __init__(self, window_width=600) -> None:
 
-        self.window_size = (window_width, window_width * 0.8)
+        self.window_size = (window_width, window_width * 0.7)
 
     def init_window(self) -> None:
         pg.init()
@@ -17,5 +17,9 @@ class Renderer:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
+
+            self.screen.fill(pg.Color(210, 210, 210))
+
+            pg.display.flip()
 
         pg.quit()
