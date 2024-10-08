@@ -30,6 +30,10 @@ class Input(Item):
 
         pg.draw.rect(screen, pg.Color(self.color), rect)
 
+        self.draw_connections(screen)
+
+    def draw_connections(self, screen) -> None:
+
         for output in self.outputs.values():
             line_start_pos = (
                 self.position[0] + self.size[0] / 2,
