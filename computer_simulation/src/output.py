@@ -32,3 +32,5 @@ class Output(Item):
         )
 
         pg.draw.rect(screen, pg.Color(self.color), rect)
+
+        self.draw_connections(screen)
