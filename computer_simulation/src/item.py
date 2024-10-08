@@ -43,10 +43,10 @@ class Item:
                     output.position[0],
                     output.position[1]
                     + (end_input_index + 1)
-                    / (output.number_of_outputs + 1)
+                    / (output.number_of_inputs + 1)
                     * output.size[1],
                 )
-                pg.draw.line(
+                pg.draw.aaline(
                     screen,
                     pg.Color(10, 10, 10),
                     line_start_pos,
