@@ -31,25 +31,3 @@ class Input(Item):
         pg.draw.rect(screen, pg.Color(self.color), rect)
 
         self.draw_connections(screen)
-
-    def draw_connections(self, screen) -> None:
-
-        for i, output in self.outputs.items():
-            if output is None:
-                continue
-
-            line_start_pos = (
-                self.position[0] + self.size[0],
-                self.position[1]
-                + (i + 1) / (self.number_of_outputs + 1) * self.size[1],
-            )
-            line_end_pos = (
-                output[0].position[0],
-                output[0].position[1] + output[0].size[1] / 2,
-            )
-            pg.draw.line(
-                screen,
-                pg.Color(10, 10, 10),
-                line_start_pos,
-                line_end_pos,
-            )
