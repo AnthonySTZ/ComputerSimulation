@@ -1,6 +1,7 @@
 import pygame as pg
 from input import Input
 from output import Output
+from item import Item
 
 
 class Renderer:
@@ -22,42 +23,40 @@ class Renderer:
         mouse_motion = 0
         mouse_motion_threshold = 10
         while run:
-            pos = pg.mouse.get_pos()
-            mouse_motion += abs(pos[0] - prev_mouse[0]) + abs(pos[1] - prev_mouse[1])
-            prev_mouse = pos
+            mouse_pos = pg.mouse.get_pos()
+            mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
+                mouse_pos[1] - prev_mouse[1]
+            )
+            prev_mouse = mouse_pos
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
                 if event.type == pg.MOUSEBUTTONUP:
                     if mouse_motion < mouse_motion_threshold:
-                        for item in self.items:
-                            if item.is_mouse_over(pos):
-                                item.clicked()
-                                break
+                        item = self.get_item_under_mouse(mouse_pos)
+                        if item is not None:
+                            item.clicked()
                     mouse_down = False
                     curr_item_selected = None
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     mouse_motion = 0
                     mouse_down = True
-                    for item in self.items:
-                        if item.is_mouse_over(pos):
-                            curr_item_selected = item
-                            break
+                    curr_item_selected = self.get_item_under_mouse(mouse_pos)
 
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
                         if curr_item_selected is not None:
-                            curr_item_selected.drag(pos)
+                            curr_item_selected.drag(mouse_pos)
 
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_i:
                         print("Item Input created")
-                        self.add_item(Input(pos))
+                        self.add_item(Input(mouse_pos))
 
                     if event.key == pg.K_o:
-                        print("Item Input created")
-                        self.add_item(Output(pos))
+                        print("Item Output created")
+                        self.add_item(Output(mouse_pos))
 
             self.screen.fill(pg.Color(210, 210, 210))
 
@@ -74,3 +73,9 @@ class Renderer:
         for item in self.items:
             item.update()
             item.draw(self.screen)
+
+    def get_item_under_mouse(self, pos) -> Item | None:
+        for item in self.items:
+            if item.is_mouse_over(pos):
+                return item
+        return None
