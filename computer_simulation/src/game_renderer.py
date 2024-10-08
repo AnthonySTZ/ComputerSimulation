@@ -15,15 +15,39 @@ class Renderer:
 
     def run(self) -> None:
         run = True
+        mouse_down = False
+        curr_item_selected = []
+        prev_mouse = (0, 0)
+        mouse_motion = 0
+        mouse_motion_threshold = 10
         while run:
+            pos = pg.mouse.get_pos()
+            mouse_motion += abs(pos[0] - prev_mouse[0]) + abs(pos[1] - prev_mouse[1])
+            prev_mouse = pos
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
-                elif event.type == pg.MOUSEBUTTONUP:
-                    pos = pg.mouse.get_pos()
+                if event.type == pg.MOUSEBUTTONUP:
+                    if mouse_motion < mouse_motion_threshold:
+                        for item in self.items:
+                            if item.is_mouse_over(pos):
+                                item.clicked()
+                                break
+                    mouse_down = False
+                    curr_item_selected = []
+
+                elif event.type == pg.MOUSEBUTTONDOWN:
+                    mouse_motion = 0
+                    mouse_down = True
                     for item in self.items:
                         if item.is_mouse_over(pos):
-                            item.toogle_state()
+                            curr_item_selected = item
+                            break
+
+                if mouse_down:
+                    if mouse_motion >= mouse_motion_threshold:
+                        if curr_item_selected is not None:
+                            curr_item_selected.drag(pos)
 
             self.screen.fill(pg.Color(210, 210, 210))
 

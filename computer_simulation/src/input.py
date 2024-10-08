@@ -17,7 +17,7 @@ class Input(Item):
     def get_output_value(self, connection_index) -> bool:
         return self.state
 
-    def toogle_state(self):
+    def clicked(self):
         self.state = not self.state
         self.change_color()
 
