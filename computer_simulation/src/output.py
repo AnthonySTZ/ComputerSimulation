@@ -9,7 +9,7 @@ class Output(Item):
         self.color = (155, 155, 155)
 
     def get_output_value(self, connection_index) -> bool:
-        if self.inputs == []:
+        if len(self.inputs) == 0:
             return False
 
         input_node = self.inputs[0][0]
