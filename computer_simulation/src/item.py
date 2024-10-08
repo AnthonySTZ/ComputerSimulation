@@ -9,8 +9,8 @@ class Item:
         self.size = (30, 30)
         self.number_of_inputs = nb_inputs
         self.number_of_outputs = nb_outputs
-        self.inputs = {}
-        self.outputs = {}
+        self.inputs = {i: None for i in range(nb_inputs)}
+        self.outputs = {i: None for i in range(nb_outputs)}
 
     def drag(self, position: tuple) -> None:
         self.position = (position[0] - self.size[0] / 2, position[1] - self.size[1] / 2)

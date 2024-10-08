@@ -35,6 +35,9 @@ class Input(Item):
     def draw_connections(self, screen) -> None:
 
         for output in self.outputs.values():
+            if output is None:
+                continue
+
             line_start_pos = (
                 self.position[0] + self.size[0] / 2,
                 self.position[1] + self.size[1] / 2,

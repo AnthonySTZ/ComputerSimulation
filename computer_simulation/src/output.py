@@ -9,11 +9,11 @@ class Output(Item):
         self.color = (155, 155, 155)
 
     def get_output_value(self, connection_index) -> bool:
-        if len(self.inputs) == 0:
+        if self.inputs[connection_index] is None:
             return False
 
-        input_node = self.inputs[0][0]
-        input_connection_index = self.inputs[0][1]
+        input_node = self.inputs[connection_index][0]
+        input_connection_index = self.inputs[connection_index][1]
 
         return input_node.get_output_value(input_connection_index)
 
