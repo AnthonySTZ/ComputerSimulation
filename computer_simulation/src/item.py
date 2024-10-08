@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class Item:
-    def __init__(self) -> None:
+    def __init__(self, position=(0, 0)) -> None:
 
-        self.position = (0, 0)
+        self.position = position
         self.size = (30, 30)
         self.number_of_inputs = 0
         self.number_of_outputs = 0

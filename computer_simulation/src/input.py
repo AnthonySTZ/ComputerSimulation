@@ -4,8 +4,8 @@ import logics
 
 
 class Input(Item):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, position=(0, 0)) -> None:
+        super().__init__(position)
         self.number_of_inputs = 0
         self.number_of_outputs = 1
         self.state = False

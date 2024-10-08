@@ -16,7 +16,7 @@ class Renderer:
     def run(self) -> None:
         run = True
         mouse_down = False
-        curr_item_selected = []
+        curr_item_selected = None
         prev_mouse = (0, 0)
         mouse_motion = 0
         mouse_motion_threshold = 10
@@ -34,7 +34,7 @@ class Renderer:
                                 item.clicked()
                                 break
                     mouse_down = False
-                    curr_item_selected = []
+                    curr_item_selected = None
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     mouse_motion = 0
@@ -48,6 +48,11 @@ class Renderer:
                     if mouse_motion >= mouse_motion_threshold:
                         if curr_item_selected is not None:
                             curr_item_selected.drag(pos)
+
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_i:
+                        print("Item Input created")
+                        self.add_item(Input(pos))
 
             self.screen.fill(pg.Color(210, 210, 210))
 
