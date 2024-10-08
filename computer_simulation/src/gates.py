@@ -2,26 +2,31 @@ from item import Item
 import pygame as pg
 
 
-class Output(Item):
+class AndGate(Item):
     def __init__(self, position=(0, 0)) -> None:
-        super().__init__(position, 1, 1)
+        super().__init__(position, 2, 1)
         self.state = True
-        self.color = (155, 155, 155)
+        self.color = (200, 200, 50)
 
     def get_output_value(self, connection_index) -> bool:
-        if self.inputs[0] is None:
+        if self.inputs[0] is None or self.inputs[1] is None:
             return False
 
-        input_node = self.inputs[0][0]
-        input_connection_index = self.inputs[0][1]
+        input_node_1 = self.inputs[0][0]
+        input_connection_index_1 = self.inputs[0][1]
 
-        return input_node.get_output_value(input_connection_index)
+        input_node_2 = self.inputs[1][0]
+        input_connection_index_2 = self.inputs[1][1]
+
+        return input_node_1.get_output_value(
+            input_connection_index_1
+        ) and input_node_2.get_output_value(input_connection_index_2)
 
     def clicked(self):
         pass
 
     def update(self) -> None:
-        self.color = (100, 200, 100) if self.get_output_value(0) else (155, 155, 155)
+        pass
 
     def draw(self, screen) -> None:
         rect = pg.Rect(
