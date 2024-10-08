@@ -34,16 +34,17 @@ class Input(Item):
 
     def draw_connections(self, screen) -> None:
 
-        for output in self.outputs.values():
+        for i, output in self.outputs.items():
             if output is None:
                 continue
 
             line_start_pos = (
-                self.position[0] + self.size[0] / 2,
-                self.position[1] + self.size[1] / 2,
+                self.position[0] + self.size[0],
+                self.position[1]
+                + (i + 1) / (self.number_of_outputs + 1) * self.size[1],
             )
             line_end_pos = (
-                output[0].position[0] + output[0].size[0] / 2,
+                output[0].position[0],
                 output[0].position[1] + output[0].size[1] / 2,
             )
             pg.draw.line(
