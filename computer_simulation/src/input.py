@@ -20,7 +20,7 @@ class Input(Item):
     def update(self) -> None:
         self.color = (0, 200, 0) if self.state else (200, 0, 0)
 
-    def get_rect(self) -> pg.Rect:
+    def draw(self, screen) -> None:
         rect = pg.Rect(
             self.position[0],
             self.position[1],
@@ -28,4 +28,4 @@ class Input(Item):
             self.size[1],
         )
 
-        return rect
+        pg.draw.rect(screen, pg.Color(self.color), rect)

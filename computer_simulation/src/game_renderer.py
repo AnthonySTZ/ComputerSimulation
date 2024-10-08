@@ -73,4 +73,4 @@ class Renderer:
     def draw_items(self) -> None:
         for item in self.items:
             item.update()
-            pg.draw.rect(self.screen, pg.Color(item.color), item.get_rect())
+            item.draw(self.screen)
