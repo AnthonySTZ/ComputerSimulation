@@ -1,5 +1,6 @@
 import pygame as pg
 from input import Input
+from output import Output
 
 
 class Renderer:
@@ -54,6 +55,10 @@ class Renderer:
                         print("Item Input created")
                         self.add_item(Input(pos))
 
+                    if event.key == pg.K_o:
+                        print("Item Input created")
+                        self.add_item(Output(pos))
+
             self.screen.fill(pg.Color(210, 210, 210))
 
             self.draw_items()
@@ -67,4 +72,5 @@ class Renderer:
 
     def draw_items(self) -> None:
         for item in self.items:
+            item.update()
             pg.draw.rect(self.screen, pg.Color(item.color), item.get_rect())
