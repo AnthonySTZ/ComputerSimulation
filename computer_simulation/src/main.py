@@ -1,7 +1,7 @@
 from game_renderer import Renderer
 from input import Input
 from output import Output
-from gates import AndGate
+from gates import AndGate, OrGate
 
 if __name__ == "__main__":
 
