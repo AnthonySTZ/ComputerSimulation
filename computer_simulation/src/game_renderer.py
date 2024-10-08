@@ -2,6 +2,7 @@ import pygame as pg
 from input import Input
 from output import Output
 from item import Item
+from gates import AndGate, OrGate
 
 
 class Renderer:
@@ -57,6 +58,14 @@ class Renderer:
                     if event.key == pg.K_o:
                         print("Item Output created")
                         self.add_item(Output(mouse_pos))
+
+                    if event.key == pg.K_r:
+                        print("Item OR created")
+                        self.add_item(OrGate(mouse_pos))
+
+                    if event.key == pg.K_a:
+                        print("Item AND created")
+                        self.add_item(AndGate(mouse_pos))
 
             self.screen.fill(pg.Color(210, 210, 210))
 
