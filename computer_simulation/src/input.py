@@ -29,3 +29,19 @@ class Input(Item):
         )
 
         pg.draw.rect(screen, pg.Color(self.color), rect)
+
+        for output in self.outputs.values():
+            line_start_pos = (
+                self.position[0] + self.size[0] / 2,
+                self.position[1] + self.size[1] / 2,
+            )
+            line_end_pos = (
+                output[0].position[0] + output[0].size[0] / 2,
+                output[0].position[1] + output[0].size[1] / 2,
+            )
+            pg.draw.line(
+                screen,
+                pg.Color(10, 10, 10),
+                line_start_pos,
+                line_end_pos,
+            )
