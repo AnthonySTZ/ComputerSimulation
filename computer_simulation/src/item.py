@@ -66,13 +66,19 @@ class Item:
     def connect_to(
         self, connection, first_connection_index: int, second_connection_index: int
     ) -> None:
-        self.outputs[first_connection_index][connection] = second_connection_index
+        if connection in self.outputs[first_connection_index]:
+            self.outputs[first_connection_index][connection].append(
+                second_connection_index
+            )
+        else:
+            self.outputs[first_connection_index][connection] = [second_connection_index]
         connection.inputs[second_connection_index] = [self, first_connection_index]
+        print(self.outputs)
 
     def unconnect_from(
         self, connection, first_connection_index: int, second_connection_index: int
     ) -> None:
-        del self.outputs[first_connection_index][connection]
+        self.outputs[first_connection_index][connection].remove(second_connection_index)
         connection.inputs[second_connection_index] = None
 
     def draw_inputs_and_outputs_slots(self, screen) -> None:
@@ -118,28 +124,29 @@ class Item:
         self.draw_inputs_and_outputs_slots(screen)
 
         for start_output_index, outputs in self.outputs.items():
-            for output, end_input_index in outputs.items():
+            for output, end_input_indices in outputs.items():
+                for end_input_index in end_input_indices:
 
-                line_start_pos = (
-                    self.position[0] + self.size[0],
-                    self.position[1]
-                    + (start_output_index + 1)
-                    / (self.number_of_outputs + 1)
-                    * self.size[1],
-                )
-                line_end_pos = (
-                    output.position[0],
-                    output.position[1]
-                    + (end_input_index + 1)
-                    / (output.number_of_inputs + 1)
-                    * output.size[1],
-                )
-                pg.draw.aaline(
-                    screen,
-                    pg.Color(10, 10, 10),
-                    line_start_pos,
-                    line_end_pos,
-                )
+                    line_start_pos = (
+                        self.position[0] + self.size[0],
+                        self.position[1]
+                        + (start_output_index + 1)
+                        / (self.number_of_outputs + 1)
+                        * self.size[1],
+                    )
+                    line_end_pos = (
+                        output.position[0],
+                        output.position[1]
+                        + (end_input_index + 1)
+                        / (output.number_of_inputs + 1)
+                        * output.size[1],
+                    )
+                    pg.draw.aaline(
+                        screen,
+                        pg.Color(10, 10, 10),
+                        line_start_pos,
+                        line_end_pos,
+                    )
 
     def draw(self, screen) -> None:
         rect = pg.Rect(

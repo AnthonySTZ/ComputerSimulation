@@ -8,18 +8,16 @@ class AndGate(Item):
         self.state = True
 
     def get_output_value(self, connection_index) -> bool:
-        if self.inputs[0] is None or self.inputs[1] is None:
-            return False
+        val_1 = False
+        val_2 = False
 
-        input_node_1 = self.inputs[0][0]
-        input_connection_index_1 = self.inputs[0][1]
+        if self.inputs[0] is not None:
+            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
 
-        input_node_2 = self.inputs[1][0]
-        input_connection_index_2 = self.inputs[1][1]
+        if self.inputs[1] is not None:
+            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
 
-        return input_node_1.get_output_value(
-            input_connection_index_1
-        ) and input_node_2.get_output_value(input_connection_index_2)
+        return val_1 and val_2
 
     def clicked(self):
         pass
@@ -44,18 +42,16 @@ class OrGate(Item):
         self.state = True
 
     def get_output_value(self, connection_index) -> bool:
-        if self.inputs[0] is None or self.inputs[1] is None:
-            return False
+        val_1 = False
+        val_2 = False
 
-        input_node_1 = self.inputs[0][0]
-        input_connection_index_1 = self.inputs[0][1]
+        if self.inputs[0] is not None:
+            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
 
-        input_node_2 = self.inputs[1][0]
-        input_connection_index_2 = self.inputs[1][1]
+        if self.inputs[1] is not None:
+            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
 
-        return input_node_1.get_output_value(
-            input_connection_index_1
-        ) or input_node_2.get_output_value(input_connection_index_2)
+        return val_1 or val_2
 
     def clicked(self):
         pass
