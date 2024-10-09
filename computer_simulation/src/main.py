@@ -6,7 +6,7 @@ import pygame as pg
 
 
 def create_default_full_adder(
-    game_renderer,
+    game_renderer: Renderer,
 ) -> None:  # Create a simple adder for testing purposes
     input_A = Input((200, 200))
     input_B = Input((200, 300))
