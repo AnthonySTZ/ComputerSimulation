@@ -16,9 +16,6 @@ if __name__ == "__main__":
 
     or_gate = OrGate((300, 350))
 
-    input.connect_to(and_gate, 0, 0)  # Connect the input item to the AND gate
-    input.connect_to(and_gate, 0, 1)  # Connect the input item to the AND gate
-    and_gate.connect_to(output, 0, 0)  # Connect the AND gate output to the output item
     game.add_item(input)  # Add an input item to the game
     game.add_item(input_2)  # Add an input item to the game
     game.add_item(input_3)  # Add an input item to the game

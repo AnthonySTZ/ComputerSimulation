@@ -2,7 +2,7 @@ import pygame as pg
 from input import Input
 from output import Output
 from item import Item
-from gates import AndGate, OrGate
+from gates import AndGate, OrGate, NotGate, NandGate, NorGate, XorGate
 
 
 class Renderer:
@@ -50,9 +50,6 @@ class Renderer:
                             item: Item = mouse_over_slot_index[0]
                             slot_type: str = mouse_over_slot_index[1]
                             slot_index: int = mouse_over_slot_index[2]
-                            print(
-                                f"Mouse over slot : {slot_type} num°{slot_index} of item {item}"
-                            )
                             if slot_type == "input":
                                 if item.inputs[slot_index] is not None:
                                     input_connections = [
@@ -106,6 +103,22 @@ class Renderer:
                     if event.key == pg.K_a:
                         print("Item AND created")
                         self.add_item(AndGate(mouse_pos))
+
+                    if event.key == pg.K_n:
+                        print("Item NOT created")
+                        self.add_item(NotGate(mouse_pos))
+
+                    if event.key == pg.K_d:
+                        print("Item NAND created")
+                        self.add_item(NandGate(mouse_pos))
+
+                    if event.key == pg.K_p:
+                        print("Item NOR created")
+                        self.add_item(NorGate(mouse_pos))
+
+                    if event.key == pg.K_x:
+                        print("Item XOR created")
+                        self.add_item(XorGate(mouse_pos))
 
             self.draw_items()
 
