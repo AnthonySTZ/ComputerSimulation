@@ -33,19 +33,24 @@ class Renderer:
 
             # Check if mouse over input or output
             for item in self.items:
-                item.set_mouse_over_slots(mouse_pos)
+                mouse_over_slot_index = item.set_mouse_over_slots(mouse_pos)
+                if mouse_over_slot_index is not None:
+                    break
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
                 if event.type == pg.MOUSEBUTTONUP:
                     if mouse_motion < mouse_motion_threshold:
+                        if mouse_over_slot_index is not None:
+                            item = mouse_over_slot_index[0]
+                            slot_type = mouse_over_slot_index[1]
+                            slot_index = mouse_over_slot_index[2]
+                            print(
+                                f"Mouse over slot : {slot_type} num°{slot_index} of item {item}"
+                            )
                         item = self.get_item_under_mouse(mouse_pos)
-                        if (
-                            item is not None
-                            and item.input_over is None
-                            and item.output_over is None
-                        ):
+                        if item is not None:
                             item.clicked()
                     mouse_down = False
                     curr_item_selected = None

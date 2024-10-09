@@ -33,7 +33,7 @@ class Item:
             self.position, self.size[0], self.size[1], mouse_position
         )
 
-    def set_mouse_over_slots(self, position: tuple) -> None:
+    def set_mouse_over_slots(self, position: tuple) -> list | None:
         for i in range(self.number_of_inputs):
             input_corner_position = (
                 self.position[0] - self.slot_size / 2,
@@ -45,7 +45,7 @@ class Item:
                 input_corner_position, self.slot_size, self.slot_size, position
             ):
                 self.input_over = i
-                return
+                return [self, "input", i]
         self.input_over = None
 
         for i in range(self.number_of_outputs):
@@ -59,14 +59,21 @@ class Item:
                 output_corner_position, self.slot_size, self.slot_size, position
             ):
                 self.output_over = i
-                return
+                return [self, "output", i]
         self.output_over = None
+        return None
 
     def connect_to(
         self, connection, first_connection_index: int, second_connection_index: int
     ) -> None:
         self.outputs[first_connection_index][connection] = second_connection_index
         connection.inputs[second_connection_index] = [self, first_connection_index]
+
+    def unconnect_from(
+        self, connection, first_connection_index: int, second_connection_index: int
+    ) -> None:
+        del self.outputs[first_connection_index][connection]
+        connection.inputs[second_connection_index] = None
 
     def draw_inputs_and_outputs_slots(self, screen) -> None:
 
@@ -151,6 +158,9 @@ class Item:
         screen.blit(text_surface, text_rect)
 
         self.draw_connections(screen)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}"
 
     @abstractmethod
     def clicled(self) -> None:
