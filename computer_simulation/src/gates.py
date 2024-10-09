@@ -1,5 +1,6 @@
 from item import Item
 import pygame as pg
+import logics
 
 
 class AndGate(Item):
@@ -7,16 +8,12 @@ class AndGate(Item):
         super().__init__("AND", (200, 200, 50), position, 2, 1)
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
-        val_2 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        if self.inputs[1] is not None:
-            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
-
-        return val_1 and val_2
+        return values[0] and values[1]
 
     def clicked(self):
         pass
@@ -40,16 +37,12 @@ class OrGate(Item):
         )
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
-        val_2 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        if self.inputs[1] is not None:
-            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
-
-        return val_1 or val_2
+        return values[0] or values[1]
 
     def clicked(self):
         pass
@@ -73,12 +66,12 @@ class NotGate(Item):
         )
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        return not val_1
+        return not values[0]
 
     def clicked(self):
         pass
@@ -102,16 +95,12 @@ class NandGate(Item):
         )
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
-        val_2 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        if self.inputs[1] is not None:
-            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
-
-        return not (val_1 and val_2)
+        return not (values[0] and values[1])
 
     def clicked(self):
         pass
@@ -135,16 +124,12 @@ class NorGate(Item):
         )
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
-        val_2 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        if self.inputs[1] is not None:
-            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
-
-        return not (val_1 or val_2)
+        return not (values[0] or values[1])
 
     def clicked(self):
         pass
@@ -168,19 +153,48 @@ class XorGate(Item):
         )
 
     def get_output_value(self, connection_index) -> bool:
-        val_1 = False
-        val_2 = False
+        values = [False for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = self.inputs[i][0].get_output_value(self.inputs[i][1])
 
-        if self.inputs[0] is not None:
-            val_1 = self.inputs[0][0].get_output_value(self.inputs[0][1])
-
-        if self.inputs[1] is not None:
-            val_2 = self.inputs[1][0].get_output_value(self.inputs[1][1])
-
-        return (val_1 or val_2) and (not val_1 or not val_2)
+        return (values[0] or values[1]) and (not values[0] or not values[1])
 
     def clicked(self):
         pass
 
     def update(self) -> None:
         pass
+
+
+class BinToIntGate(Item):
+    def __init__(self, position=(0, 0)) -> None:
+        super().__init__(
+            "0",
+            (
+                30,
+                250,
+                60,
+            ),
+            position,
+            4,
+            0,
+            (50, 75),
+        )
+
+    def get_output_value(self, connection_index) -> bool:
+        pass
+
+    def clicked(self):
+        pass
+
+    def update(self) -> None:
+        values = ["0" for _ in range(self.number_of_inputs)]
+        for i in range(self.number_of_inputs):
+            if self.inputs[i] is not None:
+                values[i] = str(
+                    int(self.inputs[i][0].get_output_value(self.inputs[i][1]))
+                )
+
+        bin_to_int = logics.binaries_to_integer("".join(values))
+        self.text = str(bin_to_int)

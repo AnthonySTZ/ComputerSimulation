@@ -2,7 +2,7 @@ import pygame as pg
 from input import Input
 from output import Output
 from item import Item
-from gates import AndGate, OrGate, NotGate, NandGate, NorGate, XorGate
+from gates import AndGate, OrGate, NotGate, NandGate, NorGate, XorGate, BinToIntGate
 
 
 class Renderer:
@@ -121,6 +121,10 @@ class Renderer:
                     if event.key == pg.K_x:
                         print("Item XOR created")
                         self.add_item(XorGate(mouse_pos))
+
+                    if event.key == pg.K_b:
+                        print("Item BinToInt created")
+                        self.add_item(BinToIntGate(mouse_pos))
 
             self.draw_items()
 

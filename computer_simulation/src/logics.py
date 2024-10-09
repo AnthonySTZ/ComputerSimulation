@@ -11,3 +11,7 @@ def check_collision(
     ):
         return True
     return False
+
+
+def binaries_to_integer(binaries: str):
+    return int(binaries, 2)

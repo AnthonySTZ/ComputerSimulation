@@ -11,10 +11,11 @@ class Item:
         position=(0, 0),
         nb_inputs=0,
         nb_outputs=0,
+        size=(50, 50),
     ) -> None:
 
         self.position = position
-        self.size = (50, 50)
+        self.size = size
         self.number_of_inputs = nb_inputs
         self.number_of_outputs = nb_outputs
         self.input_over = None
