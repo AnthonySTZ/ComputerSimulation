@@ -43,15 +43,26 @@ class Renderer:
                 if event.type == pg.MOUSEBUTTONUP:
                     if mouse_motion < mouse_motion_threshold:
                         if mouse_over_slot_index is not None:
-                            item = mouse_over_slot_index[0]
-                            slot_type = mouse_over_slot_index[1]
-                            slot_index = mouse_over_slot_index[2]
+                            item: Item = mouse_over_slot_index[0]
+                            slot_type: str = mouse_over_slot_index[1]
+                            slot_index: int = mouse_over_slot_index[2]
                             print(
                                 f"Mouse over slot : {slot_type} num°{slot_index} of item {item}"
                             )
-                        item = self.get_item_under_mouse(mouse_pos)
-                        if item is not None:
-                            item.clicked()
+                            if slot_type == "input":
+                                if item.inputs[slot_index] is not None:
+                                    input_connections = [
+                                        i for i in item.inputs[slot_index]
+                                    ]
+                                    conn_item: Item = input_connections[0]
+                                    conn_index: int = input_connections[1]
+                                    conn_item.unconnect_from(
+                                        item, conn_index, slot_index
+                                    )
+                        else:
+                            item = self.get_item_under_mouse(mouse_pos)
+                            if item is not None:
+                                item.clicked()
                     mouse_down = False
                     curr_item_selected = None
 
