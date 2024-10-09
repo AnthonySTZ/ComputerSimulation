@@ -6,7 +6,7 @@ import pygame as pg
 
 if __name__ == "__main__":
 
-    game = Renderer(800)
+    game = Renderer(1200)
     game.init_window()
     input = Input((200, 200))
     input_2 = Input((200, 300))

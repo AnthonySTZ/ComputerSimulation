@@ -6,10 +6,11 @@ from gates import AndGate, OrGate, NotGate, NandGate, NorGate, XorGate
 
 
 class Renderer:
-    def __init__(self, window_width=600) -> None:
+    def __init__(self, window_width=600, grid_size=15) -> None:
 
-        self.window_size = (window_width, window_width * 0.7)
+        self.window_size = (window_width, int(window_width * 0.7))
         self.items = []
+        self.grid_size = grid_size
 
     def init_window(self) -> None:
         pg.init()
@@ -28,6 +29,7 @@ class Renderer:
         while run:
 
             self.screen.fill(pg.Color(210, 210, 210))
+            self.draw_background_grid()
 
             mouse_pos = pg.mouse.get_pos()
             mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
@@ -85,7 +87,7 @@ class Renderer:
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
                         if curr_item_selected is not None:
-                            curr_item_selected.drag(mouse_pos)
+                            curr_item_selected.drag(mouse_pos, self.grid_size)
 
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_i:
@@ -133,6 +135,7 @@ class Renderer:
 
     def add_item(self, item) -> None:
         self.items.append(item)
+        item.drag(item.position, self.grid_size)
 
     def draw_items(self) -> None:
         for item in self.items:
@@ -144,3 +147,10 @@ class Renderer:
             if item.is_mouse_over(pos):
                 return item
         return None
+
+    def draw_background_grid(self) -> None:
+        grid_color = (160, 160, 160)
+        for x in range(0, self.window_size[0], self.grid_size):
+            pg.draw.line(self.screen, grid_color, (x, 0), (x, self.window_size[1]))
+        for y in range(0, self.window_size[1], self.grid_size):
+            pg.draw.line(self.screen, grid_color, (0, y), (self.window_size[0], y))
