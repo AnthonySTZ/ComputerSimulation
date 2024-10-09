@@ -24,7 +24,11 @@ class Renderer:
         prev_mouse = (0, 0)
         mouse_motion = 0
         mouse_motion_threshold = 10
+        connecting_item = None
         while run:
+
+            self.screen.fill(pg.Color(210, 210, 210))
+
             mouse_pos = pg.mouse.get_pos()
             mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
                 mouse_pos[1] - prev_mouse[1]
@@ -59,6 +63,14 @@ class Renderer:
                                     conn_item.unconnect_from(
                                         item, conn_index, slot_index
                                     )
+                                if connecting_item is not None:
+                                    connecting_item[0].connect_to(
+                                        item, connecting_item[1], slot_index
+                                    )
+                                    connecting_item = None
+
+                            if slot_type == "output":
+                                connecting_item = [item, slot_index]
                         else:
                             item = self.get_item_under_mouse(mouse_pos)
                             if item is not None:
@@ -70,6 +82,8 @@ class Renderer:
                     mouse_motion = 0
                     mouse_down = True
                     curr_item_selected = self.get_item_under_mouse(mouse_pos)
+                    if curr_item_selected is None and mouse_over_slot_index is None:
+                        connecting_item = None
 
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
@@ -93,9 +107,12 @@ class Renderer:
                         print("Item AND created")
                         self.add_item(AndGate(mouse_pos))
 
-            self.screen.fill(pg.Color(210, 210, 210))
-
             self.draw_items()
+
+            if connecting_item is not None:
+                connecting_item[0].draw_mouse_input_line(
+                    self.screen, connecting_item[1], mouse_pos
+                )
 
             pg.display.flip()
 

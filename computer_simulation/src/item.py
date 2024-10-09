@@ -162,6 +162,21 @@ class Item:
     def __repr__(self):
         return f"{self.__class__.__name__}"
 
+    def draw_mouse_input_line(
+        self, screen, outputs_index: int, position: tuple
+    ) -> None:
+        line_start_pos = (
+            self.position[0] + self.size[0],
+            self.position[1]
+            + (outputs_index + 1) / (self.number_of_outputs + 1) * self.size[1],
+        )
+        pg.draw.aaline(
+            screen,
+            pg.Color(10, 10, 10),
+            line_start_pos,
+            position,
+        )
+
     @abstractmethod
     def clicled(self) -> None:
         pass
