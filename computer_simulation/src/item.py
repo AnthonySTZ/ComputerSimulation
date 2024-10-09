@@ -4,7 +4,14 @@ import pygame as pg
 
 
 class Item:
-    def __init__(self, position=(0, 0), nb_inputs=0, nb_outputs=0) -> None:
+    def __init__(
+        self,
+        text,
+        color=(80, 50, 0),
+        position=(0, 0),
+        nb_inputs=0,
+        nb_outputs=0,
+    ) -> None:
 
         self.position = position
         self.size = (50, 50)
@@ -15,6 +22,8 @@ class Item:
         self.slot_size = 10
         self.inputs = {i: None for i in range(nb_inputs)}
         self.outputs = {i: {} for i in range(nb_outputs)}
+        self.text = text
+        self.color = color
 
     def drag(self, position: tuple) -> None:
         self.position = (position[0] - self.size[0] / 2, position[1] - self.size[1] / 2)
@@ -125,14 +134,28 @@ class Item:
                     line_end_pos,
                 )
 
+    def draw(self, screen) -> None:
+        rect = pg.Rect(
+            self.position[0],
+            self.position[1],
+            self.size[0],
+            self.size[1],
+        )
+
+        pg.draw.rect(screen, pg.Color(self.color), rect)
+
+        my_font = pg.font.SysFont("perpetuatitlinggras", 15)
+        text_surface = my_font.render(self.text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=rect.center)
+
+        screen.blit(text_surface, text_rect)
+
+        self.draw_connections(screen)
+
     @abstractmethod
     def clicled(self) -> None:
         pass
 
     @abstractmethod
     def update(self) -> None:
-        pass
-
-    @abstractmethod
-    def draw(self) -> None:
         pass

@@ -13,6 +13,7 @@ class Renderer:
 
     def init_window(self) -> None:
         pg.init()
+        pg.font.init()
         pg.display.set_caption("Computer Simulation")
         self.screen = pg.display.set_mode(self.window_size)
 
