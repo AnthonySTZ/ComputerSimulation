@@ -1,4 +1,4 @@
-# Computer Simulation
+# Computer Simulation WIP
 
 This project consists of simulating electrical gates such as AND, OR,... just for fun.
 
