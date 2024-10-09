@@ -80,7 +80,6 @@ class Item:
         else:
             self.outputs[first_connection_index][connection] = [second_connection_index]
         connection.inputs[second_connection_index] = [self, first_connection_index]
-        print(self.outputs)
 
     def unconnect_from(
         self, connection, first_connection_index: int, second_connection_index: int
