@@ -7,7 +7,7 @@ class Item:
     def __init__(self, position=(0, 0), nb_inputs=0, nb_outputs=0) -> None:
 
         self.position = position
-        self.size = (30, 30)
+        self.size = (50, 50)
         self.number_of_inputs = nb_inputs
         self.number_of_outputs = nb_outputs
         self.inputs = {i: None for i in range(nb_inputs)}
@@ -27,7 +27,39 @@ class Item:
         self.outputs[first_connection_index][connection] = second_connection_index
         connection.inputs[second_connection_index] = [self, first_connection_index]
 
+    def draw_inputs_and_outputs_slots(self, screen) -> None:
+        slot_size = 10
+        for i in range(self.number_of_inputs):
+            pg.draw.rect(
+                screen,
+                pg.Color(50, 50, 50),
+                (
+                    self.position[0] - slot_size / 2,
+                    self.position[1]
+                    + (i + 1) / (self.number_of_inputs + 1) * self.size[1]
+                    - slot_size / 2,
+                    slot_size,
+                    slot_size,
+                ),
+            )
+
+        for i in range(self.number_of_outputs):
+            pg.draw.rect(
+                screen,
+                pg.Color(50, 50, 50),
+                (
+                    self.position[0] - slot_size / 2 + self.size[0],
+                    self.position[1]
+                    + (i + 1) / (self.number_of_outputs + 1) * self.size[1]
+                    - slot_size / 2,
+                    slot_size,
+                    slot_size,
+                ),
+            )
+
     def draw_connections(self, screen) -> None:
+
+        self.draw_inputs_and_outputs_slots(screen)
 
         for start_output_index, outputs in self.outputs.items():
             for output, end_input_index in outputs.items():
