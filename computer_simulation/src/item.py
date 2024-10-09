@@ -10,6 +10,9 @@ class Item:
         self.size = (50, 50)
         self.number_of_inputs = nb_inputs
         self.number_of_outputs = nb_outputs
+        self.input_over = None
+        self.output_over = None
+        self.slot_size = 10
         self.inputs = {i: None for i in range(nb_inputs)}
         self.outputs = {i: {} for i in range(nb_outputs)}
 
@@ -21,6 +24,35 @@ class Item:
             self.position, self.size[0], self.size[1], mouse_position
         )
 
+    def set_mouse_over_slots(self, position: tuple) -> None:
+        for i in range(self.number_of_inputs):
+            input_corner_position = (
+                self.position[0] - self.slot_size / 2,
+                self.position[1]
+                + (i + 1) / (self.number_of_inputs + 1) * self.size[1]
+                - self.slot_size / 2,
+            )
+            if logics.check_collision(
+                input_corner_position, self.slot_size, self.slot_size, position
+            ):
+                self.input_over = i
+                return
+        self.input_over = None
+
+        for i in range(self.number_of_outputs):
+            output_corner_position = (
+                self.position[0] - self.slot_size / 2 + self.size[0],
+                self.position[1]
+                + (i + 1) / (self.number_of_outputs + 1) * self.size[1]
+                - self.slot_size / 2,
+            )
+            if logics.check_collision(
+                output_corner_position, self.slot_size, self.slot_size, position
+            ):
+                self.output_over = i
+                return
+        self.output_over = None
+
     def connect_to(
         self, connection, first_connection_index: int, second_connection_index: int
     ) -> None:
@@ -28,32 +60,40 @@ class Item:
         connection.inputs[second_connection_index] = [self, first_connection_index]
 
     def draw_inputs_and_outputs_slots(self, screen) -> None:
-        slot_size = 10
+
         for i in range(self.number_of_inputs):
+            if self.input_over == i:
+                slot_color = pg.Color(155, 0, 0)
+            else:
+                slot_color = pg.Color(50, 50, 50)
             pg.draw.rect(
                 screen,
-                pg.Color(50, 50, 50),
+                slot_color,
                 (
-                    self.position[0] - slot_size / 2,
+                    self.position[0] - self.slot_size / 2,
                     self.position[1]
                     + (i + 1) / (self.number_of_inputs + 1) * self.size[1]
-                    - slot_size / 2,
-                    slot_size,
-                    slot_size,
+                    - self.slot_size / 2,
+                    self.slot_size,
+                    self.slot_size,
                 ),
             )
 
         for i in range(self.number_of_outputs):
+            if self.output_over == i:
+                slot_color = pg.Color(155, 0, 0)
+            else:
+                slot_color = pg.Color(50, 50, 50)
             pg.draw.rect(
                 screen,
-                pg.Color(50, 50, 50),
+                slot_color,
                 (
-                    self.position[0] - slot_size / 2 + self.size[0],
+                    self.position[0] - self.slot_size / 2 + self.size[0],
                     self.position[1]
                     + (i + 1) / (self.number_of_outputs + 1) * self.size[1]
-                    - slot_size / 2,
-                    slot_size,
-                    slot_size,
+                    - self.slot_size / 2,
+                    self.slot_size,
+                    self.slot_size,
                 ),
             )
 

@@ -29,13 +29,22 @@ class Renderer:
                 mouse_pos[1] - prev_mouse[1]
             )
             prev_mouse = mouse_pos
+
+            # Check if mouse over input or output
+            for item in self.items:
+                item.set_mouse_over_slots(mouse_pos)
+
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
                 if event.type == pg.MOUSEBUTTONUP:
                     if mouse_motion < mouse_motion_threshold:
                         item = self.get_item_under_mouse(mouse_pos)
-                        if item is not None:
+                        if (
+                            item is not None
+                            and item.input_over is None
+                            and item.output_over is None
+                        ):
                             item.clicked()
                     mouse_down = False
                     curr_item_selected = None
