@@ -44,22 +44,22 @@ def create_default_full_adder(
     output_1.connect_to(bin_to_int_gate, 0, 3)
     output_2.connect_to(bin_to_int_gate, 0, 2)
 
-    game.add_item(input_A)
-    game.add_item(input_B)
-    game.add_item(input_C)
+    game_renderer.add_item(input_A)
+    game_renderer.add_item(input_B)
+    game_renderer.add_item(input_C)
 
-    game.add_item(xor_gate_1)
-    game.add_item(xor_gate_2)
+    game_renderer.add_item(xor_gate_1)
+    game_renderer.add_item(xor_gate_2)
 
-    game.add_item(and_gate_1)
-    game.add_item(and_gate_2)
+    game_renderer.add_item(and_gate_1)
+    game_renderer.add_item(and_gate_2)
 
-    game.add_item(or_gate_1)
+    game_renderer.add_item(or_gate_1)
 
-    game.add_item(output_1)
-    game.add_item(output_2)
+    game_renderer.add_item(output_1)
+    game_renderer.add_item(output_2)
 
-    game.add_item(bin_to_int_gate)
+    game_renderer.add_item(bin_to_int_gate)
 
 
 if __name__ == "__main__":
