@@ -97,25 +97,23 @@ class Renderer:
                             curr_item_selected.delete_node()
                             curr_item_selected = None
 
-                if mouse_down:
-                    if mouse_motion >= mouse_motion_threshold:
-                        if curr_item_selected is not None:
-                            curr_item_selected.drag(
-                                mouse_pos, self.grid_size, world_offset
-                            )
-
-                if world_moving:
-                    self.move_world(prev_mouse, mouse_pos)
-
                 if event.type == pg.KEYDOWN:
                     self.create_node_based_on_key(event.key, mouse_pos)
 
-            self.draw_items()
+            if mouse_down:
+                if mouse_motion >= mouse_motion_threshold:
+                    if curr_item_selected is not None:
+                        curr_item_selected.drag(mouse_pos, self.grid_size, world_offset)
+
+            if world_moving:
+                self.move_world(prev_mouse, mouse_pos)
 
             if connecting_item is not None:
                 connecting_item[0].draw_mouse_input_line(
                     self.screen, connecting_item[1], mouse_pos
                 )
+
+            self.draw_items()
 
             pg.display.flip()
             prev_mouse = mouse_pos
