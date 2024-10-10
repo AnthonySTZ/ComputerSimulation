@@ -82,15 +82,15 @@ class Renderer:
                     curr_item_selected = None
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    if pg.mouse.get_pressed()[1]:
+                    if pg.mouse.get_pressed()[1]:  # Mouse Wheel Pressed
                         world_moving = True
-                    elif pg.mouse.get_pressed()[0]:
+                    elif pg.mouse.get_pressed()[0]:  # Mouse Left Click Pressed
                         mouse_motion = 0
                         mouse_down = True
                         curr_item_selected = self.get_item_under_mouse(mouse_pos)
                         if curr_item_selected is None and mouse_over_slot_index is None:
                             connecting_item = None
-                    elif pg.mouse.get_pressed()[2]:
+                    elif pg.mouse.get_pressed()[2]:  # Mouse Right Click Pressed
                         curr_item_selected = self.get_item_under_mouse(mouse_pos)
                         if curr_item_selected is not None:
                             self.items.remove(curr_item_selected)
