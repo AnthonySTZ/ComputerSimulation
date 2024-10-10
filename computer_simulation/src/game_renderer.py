@@ -26,16 +26,22 @@ class Renderer:
         mouse_motion = 0
         mouse_motion_threshold = 10
         connecting_item = None
+        world_moving = False
+        world_offset = (0, 0)
         while run:
 
             self.screen.fill(pg.Color(210, 210, 210))
-            self.draw_background_grid()
+            world_offset = (
+                self.grid_size - self.items[0].position[0] % self.grid_size,
+                self.grid_size - self.items[0].position[1] % self.grid_size,
+            )
+            self.draw_background_grid(world_offset)
 
             mouse_pos = pg.mouse.get_pos()
+
             mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
                 mouse_pos[1] - prev_mouse[1]
             )
-            prev_mouse = mouse_pos
 
             # Check if mouse over input or output
             for item in self.items:
@@ -47,6 +53,7 @@ class Renderer:
                 if event.type == pg.QUIT:
                     run = False
                 if event.type == pg.MOUSEBUTTONUP:
+                    world_moving = False
                     if mouse_motion < mouse_motion_threshold:
                         if mouse_over_slot_index is not None:
                             item: Item = mouse_over_slot_index[0]
@@ -78,16 +85,34 @@ class Renderer:
                     curr_item_selected = None
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    mouse_motion = 0
-                    mouse_down = True
-                    curr_item_selected = self.get_item_under_mouse(mouse_pos)
-                    if curr_item_selected is None and mouse_over_slot_index is None:
-                        connecting_item = None
+                    if pg.mouse.get_pressed()[1]:
+                        world_moving = True
+                    else:
+                        mouse_motion = 0
+                        mouse_down = True
+                        curr_item_selected = self.get_item_under_mouse(mouse_pos)
+                        if curr_item_selected is None and mouse_over_slot_index is None:
+                            connecting_item = None
 
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
                         if curr_item_selected is not None:
-                            curr_item_selected.drag(mouse_pos, self.grid_size)
+
+                            curr_item_selected.drag(
+                                mouse_pos, self.grid_size, world_offset
+                            )
+
+                if world_moving:
+                    world_offset = (
+                        prev_mouse[0] - mouse_pos[0],
+                        prev_mouse[1] - mouse_pos[1],
+                    )
+                    for item in self.items:
+                        item.drag(
+                            item.position,
+                            1,
+                            world_offset,
+                        )
 
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_i:
@@ -134,6 +159,7 @@ class Renderer:
                 )
 
             pg.display.flip()
+            prev_mouse = mouse_pos
 
         pg.quit()
 
@@ -152,9 +178,19 @@ class Renderer:
                 return item
         return None
 
-    def draw_background_grid(self) -> None:
+    def draw_background_grid(self, offset: tuple) -> None:
         grid_color = (160, 160, 160)
         for x in range(0, self.window_size[0], self.grid_size):
-            pg.draw.line(self.screen, grid_color, (x, 0), (x, self.window_size[1]))
+            pg.draw.aaline(
+                self.screen,
+                grid_color,
+                (x - offset[0], 0),
+                (x - offset[0], self.window_size[1]),
+            )
         for y in range(0, self.window_size[1], self.grid_size):
-            pg.draw.line(self.screen, grid_color, (0, y), (self.window_size[0], y))
+            pg.draw.aaline(
+                self.screen,
+                grid_color,
+                (0, y - offset[1]),
+                (self.window_size[0], y - offset[1]),
+            )

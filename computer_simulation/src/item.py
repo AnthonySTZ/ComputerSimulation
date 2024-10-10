@@ -26,13 +26,11 @@ class Item:
         self.text = text
         self.color = color
 
-    def drag(self, position: tuple, grid_increment: int) -> None:
-        pos_x = (position[0] - self.size[0] / 2) - (
-            position[0] - self.size[0] / 2
-        ) % grid_increment
-        pos_y = (position[1] - self.size[1] / 2) - (
-            position[1] - self.size[1] / 2
-        ) % grid_increment
+    def drag(
+        self, position: tuple, grid_increment: int, offset: tuple = (0, 0)
+    ) -> None:
+        pos_x = position[0] - position[0] % grid_increment - offset[0]
+        pos_y = position[1] - position[1] % grid_increment - offset[1]
         self.position = (pos_x, pos_y)
 
     def is_mouse_over(self, mouse_position: tuple) -> bool:
