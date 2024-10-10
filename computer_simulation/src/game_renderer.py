@@ -43,12 +43,11 @@ class Renderer:
 
         while run:
 
-            self.screen.fill(pg.Color(210, 210, 210))
             world_offset = (
                 self.grid_size - self.items[0].position[0] % self.grid_size,
                 self.grid_size - self.items[0].position[1] % self.grid_size,
             )
-            self.draw_background_grid(world_offset)
+            self.draw_background(world_offset)
             mouse_pos = pg.mouse.get_pos()
 
             mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
@@ -134,7 +133,8 @@ class Renderer:
                 return item
         return None
 
-    def draw_background_grid(self, offset: tuple) -> None:
+    def draw_background(self, offset: tuple) -> None:
+        self.screen.fill(pg.Color(210, 210, 210))
         grid_color = (160, 160, 160)
         for x in range(0, self.window_size[0], self.grid_size):
             pg.draw.line(
