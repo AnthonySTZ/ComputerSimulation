@@ -43,10 +43,11 @@ class Renderer:
 
         while run:
 
-            world_offset = (
-                self.grid_size - self.items[0].position[0] % self.grid_size,
-                self.grid_size - self.items[0].position[1] % self.grid_size,
-            )
+            if len(self.items) > 0:
+                world_offset = (
+                    self.grid_size - self.items[0].position[0] % self.grid_size,
+                    self.grid_size - self.items[0].position[1] % self.grid_size,
+                )
             self.draw_background(world_offset)
             mouse_pos = pg.mouse.get_pos()
 
@@ -83,12 +84,18 @@ class Renderer:
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if pg.mouse.get_pressed()[1]:
                         world_moving = True
-                    else:
+                    elif pg.mouse.get_pressed()[0]:
                         mouse_motion = 0
                         mouse_down = True
                         curr_item_selected = self.get_item_under_mouse(mouse_pos)
                         if curr_item_selected is None and mouse_over_slot_index is None:
                             connecting_item = None
+                    elif pg.mouse.get_pressed()[2]:
+                        curr_item_selected = self.get_item_under_mouse(mouse_pos)
+                        if curr_item_selected is not None:
+                            self.items.remove(curr_item_selected)
+                            curr_item_selected.delete_node()
+                            curr_item_selected = None
 
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
@@ -113,7 +120,7 @@ class Renderer:
             pg.display.flip()
             prev_mouse = mouse_pos
 
-            self.show_fps(clock)
+            # self.show_fps(clock)
 
         pg.quit()
 

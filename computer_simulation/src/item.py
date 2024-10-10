@@ -196,6 +196,18 @@ class Item:
     def get_output_value(self, connection_index) -> bool:
         return False
 
+    def delete_node(self) -> None:
+        print(f"Deleting node {self}")
+
+        for output_index, connections in self.outputs.items():
+            for conn, conn_indices in connections.items():
+                for conn_index in conn_indices:
+                    conn.inputs[conn_index] = None
+
+        for input_index, connection in self.inputs.items():
+            if connection is not None:
+                del connection[0].outputs[connection[1]][self]
+
     @abstractmethod
     def clicled(self) -> None:
         pass
