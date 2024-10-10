@@ -64,35 +64,20 @@ class Renderer:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     run = False
+
                 if event.type == pg.MOUSEBUTTONUP:
-                    world_moving = False
+
                     if mouse_motion < mouse_motion_threshold:
                         if mouse_over_slot_index is not None:
-                            item: Item = mouse_over_slot_index[0]
-                            slot_type: str = mouse_over_slot_index[1]
-                            slot_index: int = mouse_over_slot_index[2]
-                            if slot_type == "input":
-                                if item.inputs[slot_index] is not None:
-                                    input_connections = [
-                                        i for i in item.inputs[slot_index]
-                                    ]
-                                    conn_item: Item = input_connections[0]
-                                    conn_index: int = input_connections[1]
-                                    conn_item.unconnect_from(
-                                        item, conn_index, slot_index
-                                    )
-                                if connecting_item is not None:
-                                    connecting_item[0].connect_to(
-                                        item, connecting_item[1], slot_index
-                                    )
-                                    connecting_item = None
-
-                            if slot_type == "output":
-                                connecting_item = [item, slot_index]
+                            connecting_item = self.mouse_click_on_slots(
+                                mouse_over_slot_index, connecting_item
+                            )
                         else:
                             item = self.get_item_under_mouse(mouse_pos)
                             if item is not None:
                                 item.clicked()
+
+                    world_moving = False
                     mouse_down = False
                     curr_item_selected = None
 
@@ -109,22 +94,12 @@ class Renderer:
                 if mouse_down:
                     if mouse_motion >= mouse_motion_threshold:
                         if curr_item_selected is not None:
-
                             curr_item_selected.drag(
                                 mouse_pos, self.grid_size, world_offset
                             )
 
                 if world_moving:
-                    world_offset = (
-                        prev_mouse[0] - mouse_pos[0],
-                        prev_mouse[1] - mouse_pos[1],
-                    )
-                    for item in self.items:
-                        item.drag(
-                            item.position,
-                            1,
-                            world_offset,
-                        )
+                    self.move_world(prev_mouse, mouse_pos)
 
                 if event.type == pg.KEYDOWN:
                     self.create_node_based_on_key(event.key, mouse_pos)
@@ -180,6 +155,37 @@ class Renderer:
         if key in self.bind_nodes:
             node_type = self.bind_nodes[key]
             self.add_item(node_type(position))
+
+    def mouse_click_on_slots(self, mouse_over_slot_index, connecting_item) -> Item:
+        item: Item = mouse_over_slot_index[0]
+        slot_type: str = mouse_over_slot_index[1]
+        slot_index: int = mouse_over_slot_index[2]
+        if slot_type == "input":
+            if item.inputs[slot_index] is not None:
+                input_connections = [i for i in item.inputs[slot_index]]
+                conn_item: Item = input_connections[0]
+                conn_index: int = input_connections[1]
+                conn_item.unconnect_from(item, conn_index, slot_index)
+            if connecting_item is not None:
+                connecting_item[0].connect_to(item, connecting_item[1], slot_index)
+                connecting_item = None
+
+        if slot_type == "output":
+            connecting_item = [item, slot_index]
+
+        return connecting_item
+
+    def move_world(self, prev_pos: tuple, new_pos: tuple) -> None:
+        world_offset = (
+            prev_pos[0] - new_pos[0],
+            prev_pos[1] - new_pos[1],
+        )
+        for item in self.items:
+            item.drag(
+                item.position,
+                1,
+                world_offset,
+            )
 
     def show_fps(self, clock) -> None:
         clock.tick()
