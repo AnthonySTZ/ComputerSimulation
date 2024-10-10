@@ -11,6 +11,17 @@ class Renderer:
         self.window_size = (window_width, int(window_width * 0.7))
         self.items = []
         self.grid_size = grid_size
+        self.bind_nodes = {
+            pg.K_i: Input,
+            pg.K_o: Output,
+            pg.K_r: OrGate,
+            pg.K_a: AndGate,
+            pg.K_n: NotGate,
+            pg.K_d: NandGate,
+            pg.K_p: NorGate,
+            pg.K_x: XorGate,
+            pg.K_b: BinToIntGate,
+        }
 
     def init_window(self) -> None:
         pg.init()
@@ -28,6 +39,8 @@ class Renderer:
         connecting_item = None
         world_moving = False
         world_offset = (0, 0)
+        clock = pg.time.Clock()
+
         while run:
 
             self.screen.fill(pg.Color(210, 210, 210))
@@ -36,7 +49,6 @@ class Renderer:
                 self.grid_size - self.items[0].position[1] % self.grid_size,
             )
             self.draw_background_grid(world_offset)
-
             mouse_pos = pg.mouse.get_pos()
 
             mouse_motion += abs(mouse_pos[0] - prev_mouse[0]) + abs(
@@ -115,41 +127,7 @@ class Renderer:
                         )
 
                 if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_i:
-                        print("Item Input created")
-                        self.add_item(Input(mouse_pos))
-
-                    if event.key == pg.K_o:
-                        print("Item Output created")
-                        self.add_item(Output(mouse_pos))
-
-                    if event.key == pg.K_r:
-                        print("Item OR created")
-                        self.add_item(OrGate(mouse_pos))
-
-                    if event.key == pg.K_a:
-                        print("Item AND created")
-                        self.add_item(AndGate(mouse_pos))
-
-                    if event.key == pg.K_n:
-                        print("Item NOT created")
-                        self.add_item(NotGate(mouse_pos))
-
-                    if event.key == pg.K_d:
-                        print("Item NAND created")
-                        self.add_item(NandGate(mouse_pos))
-
-                    if event.key == pg.K_p:
-                        print("Item NOR created")
-                        self.add_item(NorGate(mouse_pos))
-
-                    if event.key == pg.K_x:
-                        print("Item XOR created")
-                        self.add_item(XorGate(mouse_pos))
-
-                    if event.key == pg.K_b:
-                        print("Item BinToInt created")
-                        self.add_item(BinToIntGate(mouse_pos))
+                    self.create_node_based_on_key(event.key, mouse_pos)
 
             self.draw_items()
 
@@ -161,11 +139,14 @@ class Renderer:
             pg.display.flip()
             prev_mouse = mouse_pos
 
+            self.show_fps(clock)
+
         pg.quit()
 
     def add_item(self, item) -> None:
         self.items.append(item)
         item.drag(item.position, self.grid_size)
+        print(f"Added item {item}")
 
     def draw_items(self) -> None:
         for item in self.items:
@@ -181,16 +162,25 @@ class Renderer:
     def draw_background_grid(self, offset: tuple) -> None:
         grid_color = (160, 160, 160)
         for x in range(0, self.window_size[0], self.grid_size):
-            pg.draw.aaline(
+            pg.draw.line(
                 self.screen,
                 grid_color,
                 (x - offset[0], 0),
                 (x - offset[0], self.window_size[1]),
             )
         for y in range(0, self.window_size[1], self.grid_size):
-            pg.draw.aaline(
+            pg.draw.line(
                 self.screen,
                 grid_color,
                 (0, y - offset[1]),
                 (self.window_size[0], y - offset[1]),
             )
+
+    def create_node_based_on_key(self, key, position) -> None:
+        if key in self.bind_nodes:
+            node_type = self.bind_nodes[key]
+            self.add_item(node_type(position))
+
+    def show_fps(self, clock) -> None:
+        clock.tick()
+        print(f"{clock.get_fps():.2f}")
