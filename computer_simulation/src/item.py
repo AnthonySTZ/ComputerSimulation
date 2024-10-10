@@ -147,9 +147,14 @@ class Item:
                         / (output.number_of_inputs + 1)
                         * output.size[1],
                     )
+                    line_color = (
+                        pg.Color(10, 200, 10)
+                        if self.get_output_value(start_output_index)
+                        else pg.Color(10, 10, 10)
+                    )
                     pg.draw.aaline(
                         screen,
-                        pg.Color(10, 10, 10),
+                        line_color,
                         line_start_pos,
                         line_end_pos,
                     )
@@ -189,6 +194,9 @@ class Item:
             line_start_pos,
             position,
         )
+
+    def get_output_value(self, connection_index) -> bool:
+        return False
 
     @abstractmethod
     def clicled(self) -> None:
